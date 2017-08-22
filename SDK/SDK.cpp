@@ -330,12 +330,12 @@ void UTIL_ClipTraceToPlayers( Vector& vecAbsStart, Vector& vecAbsEnd, unsigned i
 	}
 }
 
-bool TraceToExit( Vector& end, trace_t& tr, Vector start, Vector vEnd, trace_t* trace )
+bool TraceToExit(Vector& end, trace_t& tr, Vector start, Vector vEnd, trace_t* trace)
 {
-	typedef bool (__fastcall* TraceToExitFn)( Vector&, trace_t&, float, float, float, float, float, float, trace_t* );
-	static DWORD TraceToExit = Utils.PatternSearch( "client.dll", ( BYTE* )"\x55\x8B\xEC\x83\xEC\x2C\xF3\x0F\x10\x75\x00\x33\xC0", "xxxxxxxxxx?xx", NULL, NULL );
+	typedef bool(__fastcall* TraceToExitFn)(Vector&, trace_t&, float, float, float, float, float, float, trace_t*);
+	static DWORD TraceToExit = Utils.PatternSearch("client.dll", (BYTE*)"\x55\x8B\xEC\x83\xEC\x30\xF3\x0F\x10\x75", "xxxxxxxxxx", NULL, NULL);
 
-	if( !TraceToExit )
+	if (!TraceToExit)
 		return false;
 
 	float start_y = start.y, start_z = start.z, start_x = start.x, dir_y = vEnd.y, dir_x = vEnd.x, dir_z = vEnd.z;
@@ -354,6 +354,7 @@ bool TraceToExit( Vector& end, trace_t& tr, Vector start, Vector vEnd, trace_t* 
 		call TraceToExit
 		add esp, 0x1C
 	}
+
 }
 
 CBaseCombatWeapon* CBaseEntity::GetActiveBaseCombatWeapon()

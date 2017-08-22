@@ -33,9 +33,6 @@
     <Filter Include="Tools\Menu">
       <UniqueIdentifier>{9b349884-b260-4de2-ab07-d26cdce682a0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tools\Hacks\Visual">
-      <UniqueIdentifier>{d12fa49d-b042-4c32-894b-3d065c3d3c8c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Tools\Hacks\UI">
       <UniqueIdentifier>{d677e61a-e85f-4d51-a4f6-50bcb8df7afb}</UniqueIdentifier>
     </Filter>
@@ -50,9 +47,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Utils\hwutils.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Utils\Utils.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -174,9 +168,6 @@
     <ClInclude Include="Tools\Hacks\Strafer.h">
       <Filter>Tools\Hacks</Filter>
     </ClInclude>
-    <ClInclude Include="Tools\Hacks\Visual\Visual.h">
-      <Filter>Tools\Hacks\Visual</Filter>
-    </ClInclude>
     <ClInclude Include="Tools\Hacks\UI\UI.h">
       <Filter>Tools\Hacks\UI</Filter>
     </ClInclude>
@@ -236,9 +227,6 @@
     <ClCompile Include="SpoofedConvar.cpp">
       <Filter>SDK\SDK Headers</Filter>
     </ClCompile>
-    <ClCompile Include="Utils\hwutils.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="Tools\Menu\Controls.cpp">
       <Filter>Tools\Menu</Filter>
     </ClCompile>
@@ -258,9 +246,6 @@
       <Filter>SDK</Filter>
     </ClCompile>
     <ClCompile Include="Hooks.cpp" />
-    <ClCompile Include="Tools\Hacks\Visual\Visual.cpp">
-      <Filter>Tools\Hacks\Visual</Filter>
-    </ClCompile>
     <ClCompile Include="Tools\Hacks\UI\UI.cpp">
       <Filter>Tools\Hacks\UI</Filter>
     </ClCompile>

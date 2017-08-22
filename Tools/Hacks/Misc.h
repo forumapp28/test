@@ -30,28 +30,28 @@ public:
 
 	static void ServerRankReveal()
 	{
-		if( !Interfaces.pEngine->IsInGame() || !Interfaces.pEngine->IsConnected() )
-			return;
+	//	if( !Interfaces.pEngine->IsInGame() || !Interfaces.pEngine->IsConnected() )
+	//		return;
 
-		if( GetAsyncKeyState( VK_TAB ) == 0 )
-			return;
+	//	if( GetAsyncKeyState( VK_TAB ) == 0 )
+	//		return;
 
-		static float fArray[ 3 ] = { 0.f, 0.f, 0.f };
+	//	static float fArray[ 3 ] = { 0.f, 0.f, 0.f };
 
-		static DWORD ServerRankReveal = ( DWORD )Utils.PatternSearch( "client.dll", ( PBYTE )"\x55\x8B\xEC\x8B\x0D\x00\x00\x00\x00\x68\x00\x00\x00\x00", "xxxxx????x????", NULL, NULL );//Utils.PFindPattern( "client.dll", "55 8B EC 8B 0D ? ? ? ? 68 ? ? ? ? ");
-		if( ServerRankReveal == 0 )
-			ServerRankReveal = ( DWORD )Utils.PatternSearch( "client.dll", ( PBYTE )"\x55\x8B\xEC\x8B\x0D\x00\x00\x00\x00\x68\x00\x00\x00\x00", "xxxxx????x????", NULL, NULL );//Utils.PFindPattern( "client.dll", "55 8B EC 8B 0D ? ? ? ? 68 ? ? ? ? ");
+	//	static DWORD ServerRankReveal = ( DWORD )Utils.PatternSearch( "client.dll", ( PBYTE )"\x55\x8B\xEC\x8B\x0D\x00\x00\x00\x00\x68\x00\x00\x00\x00", "xxxxx????x????", NULL, NULL );//Utils.PFindPattern( "client.dll", "55 8B EC 8B 0D ? ? ? ? 68 ? ? ? ? ");
+	//	if( ServerRankReveal == 0 )
+	//		ServerRankReveal = ( DWORD )Utils.PatternSearch( "client.dll", ( PBYTE )"\x55\x8B\xEC\x8B\x0D\x00\x00\x00\x00\x68\x00\x00\x00\x00", "xxxxx????x????", NULL, NULL );//Utils.PFindPattern( "client.dll", "55 8B EC 8B 0D ? ? ? ? 68 ? ? ? ? ");
 
-		if( ServerRankReveal != 0 )
-		{
-			Hacks.ServerRankRevealEx = ( ServerRankRevealAllFn )( ServerRankReveal );
-			Hacks.ServerRankRevealEx( fArray );
-		}
+	//	if( ServerRankReveal != 0 )
+	//	{
+	//		Hacks.ServerRankRevealEx = ( ServerRankRevealAllFn )( ServerRankReveal );
+	//		Hacks.ServerRankRevealEx( fArray );
+	//	}
 	}
 
 	static void SetClanTag( const char* tag, const char* name )
 	{
-		static auto pSetClanTag = reinterpret_cast< void(__fastcall*)( const char*, const char* ) >( ( DWORD )( Utils.PatternSearch( "engine.dll", ( PBYTE )"\x53\x56\x57\x8B\xDA\x8B\xF9\xFF\x15\x00\x00\x00\x00\x6A\x24\x8B\xC8\x8B\x30", "xxxxxxxxx????xxxxxx", NULL, NULL ) ) );
+		static auto pSetClanTag = reinterpret_cast< void(__fastcall*)( const char*, const char* ) >( ( DWORD )( Utils.PFindPattern( "engine.dll", "53 56 57 8B DA 8B F9 FF 15" ) ) );
 		pSetClanTag( tag, name );
 	}
 

@@ -1,6 +1,11 @@
 #pragma once
 #include "stdafx.h"
 
+class IClientModeShared
+{
+public:
+};
+
 inline void VectorSubtract( const Vector& a, const Vector& b, Vector& c )
 {
 	CHECK_VALID(a);
@@ -506,7 +511,7 @@ enum EClassIds
 #define CURRENTPLAYERCOMMANDOFFSET 0x1640
 #define PREIDCTIONSEEDOFFSET 0x30
 #define PREDICTIONPLAYEROFFSET 0x54
-#define GLOBALSOFFSET 0x53
+#define GLOBALSOFFSET 0x1B
 #define WEAPONDATA_MAXRANGEOFFSET 0x77C
 #define WEAPONDATA_DAMAGEOFFSET 0x778
 #define WEAPONDATA_RANGEMODIFIEROFFSET 0x780

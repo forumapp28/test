@@ -45,7 +45,7 @@ public:
 		else
 		{
 			// if we dont have a pointer to Move Helper, Find One.
-			Interfaces.g_pMoveHelper = **reinterpret_cast< IMoveHelper*** >( Utils.PatternSearch( "client.dll", ( PBYTE )"\x8B\x0D\x00\x00\x00\x00\x8B\x45\x00\x51\x8B\xD4\x89\x02\x8B\x01", "xx????xx?xxxxxxx", NULL, NULL ) + 2 );
+			Interfaces.g_pMoveHelper = **reinterpret_cast< IMoveHelper*** >( Utils.PatternSearch( "client.dll", ( PBYTE )"\x8B\x0D\x00\x00\x00\x00\x8B\x46\x08\x68", "xx????xxxx", NULL, NULL ) + 0x2 );
 		}
 	}
 

@@ -1,7 +1,6 @@
 ﻿#include "../../stdafx.h"
 #include "SettingsManager.h"
 #include "Menu.h"
-#include "../../Utils/hwutils.h"
 
 int MenuRed;
 int MenuGreen;
@@ -1361,7 +1360,7 @@ void DrawMenu()
 
 	if( firsttime )
 	{
-		if( skeltal() && ( Build == 13568 ) )
+		if(  Build == 13580 )
 		{
 			SetupMenu();
 			firsttime = false;

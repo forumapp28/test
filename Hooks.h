@@ -125,7 +125,9 @@ public:
 		{
 			VMTClient.bInitialize( reinterpret_cast< DWORD** >( Interfaces.pClient ) );
 			oCreateMove = VMTClient.dwHookMethod( reinterpret_cast< DWORD >( &Hooked_Createmove ), 21 );
+			cout << ired << "Create Move Hooked (21)." << iyellow << " oCreateMove = 0x" << oCreateMove << white << endl;
 			oFrameStageNotify = reinterpret_cast< iFrameStageNotifyFn >( VMTClient.dwHookMethod( reinterpret_cast< DWORD >( &Hooked_Frame_Stage_Notify ), 36 ) );
+			cout << ired << "Frame Stage Notfiy Hooked (36)." << iyellow << " oFrameStageNotify = 0x" << oFrameStageNotify << white << endl;
 		}
 
 		if( Interfaces.pEngine )
@@ -138,12 +140,14 @@ public:
 		{
 			VMTPanel.bInitialize( reinterpret_cast< unsigned long** >( Interfaces.pPanel ) );
 			oPaintTraverse = reinterpret_cast< iPaintTraverse >( VMTPanel.dwHookMethod( reinterpret_cast< DWORD >( &Hooked_PaintTraverse ), 41 ) );
+			cout << ired << "Paint Traverse Hooked (41)." << iyellow << " oPaintTraverse = 0x" << oPaintTraverse << white << endl;
 		}
 
 		if( Interfaces.g_pModelRender )
 		{
 			VMTModelRender.bInitialize( reinterpret_cast< DWORD** >( Interfaces.g_pModelRender ) );
 			oDrawModelExecute = reinterpret_cast< IDrawModelExecute >( VMTModelRender.dwHookMethod( reinterpret_cast< DWORD >( &Hooked_DrawModelExecute ), 21 ) );
+			cout << ired << "Draw Model Execute Hooked (21)." << iyellow << " oDrawModelExecute = 0x" << oDrawModelExecute << white << endl;
 		}
 
 		if( Interfaces.pClientMode )

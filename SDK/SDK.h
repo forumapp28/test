@@ -295,56 +295,50 @@ private:
 		}
 		return nullptr;
 	}
-
 public:
 	void InitialiseSDK()
 	{
-		DWORD dwInitAddress = Utils.PatternSearch( "engine.dll", ( PBYTE )"\x55\x8B\xEC\x81\xEC\x00\x00\x00\x00\x53\x56\x57\xE8\x00\x00\x00\x00\x83\x3D\x00\x00\x00\x00\x00", "xxxxx????xxxx????xx?????", NULL, NULL );
-		cout << igreen << "dwInitAddress: " << ired << "0x" << dwInitAddress << white << endl;
-
-		DWORD p = Utils.PatternSearch( "client.dll", ( BYTE* )"\xC7\x05\x00\x00\x00\x00\x00\x00\x00\x00\xA8\x01\x75\x1A\x83\xC8\x01\xA3\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x68\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x83\xC4\x04\xA1\x00\x00\x00\x00\xB9\x00\x00\x00\x00\x56", "xx????????xxxxxxxx????x????x????x????xxxx????x????x", NULL, NULL );
-
-		if( p )
+		auto p = Utils.PatternSearch("client.dll", (BYTE*)"\x8B\x0D\x00\x00\x00\x00\xFF\x75\x08\x8B\x01\xFF\x50\x64", "xx????xxxxxxxx", NULL, NULL);
+		if (p)
 		{
-			pClientMode = **( DWORD*** )( p + 2 );
+			pClientMode = **(IClientModeShared***)(p + 2);
 			pClientMode = pClientMode;
 		}
-
 		cout << iblue << "pClientMode" << igreen << ": 0x" << pClientMode << white << endl;
-		CreateInterfaceFn fnEngineFactory = ( CreateInterfaceFn )GetProcAddress( ( HMODULE )GetModuleHandle( "engine.dll" ), "CreateInterface" );
-		CreateInterfaceFn AppSystemFactory = ( CreateInterfaceFn )**( PDWORD* )( dwInitAddress + 0x3D );
-		CreateInterfaceFn MaterialSystemFactory = ( CreateInterfaceFn )GetProcAddress( ( HMODULE )GetModuleHandle( "materialsystem.dll" ), "CreateInterface" );
-		CreateInterfaceFn ClientFactory = ( CreateInterfaceFn )**( PDWORD* )( dwInitAddress + 0x75 );
-		CreateInterfaceFn StdFactory = ( CreateInterfaceFn )GetProcAddress( ( HMODULE )GetModuleHandle( "vstdlib.dll" ), "CreateInterface" );
+		
+		CreateInterface_t ClientFactory = (CreateInterface_t)GetProcAddress((HMODULE)GetModuleHandle("client.dll"), "CreateInterface");
+		CreateInterface_t EngineFactory = (CreateInterface_t)GetProcAddress((HMODULE)GetModuleHandle("engine.dll"), "CreateInterface");
+		CreateInterface_t VGUI2Factory = (CreateInterface_t)GetProcAddress((HMODULE)GetModuleHandle("vgui2.dll"), "CreateInterface");
+		CreateInterface_t VGUISurfaceFactory = (CreateInterface_t)GetProcAddress((HMODULE)GetModuleHandle("vguimatsurface.dll"), "CreateInterface");
+		CreateInterface_t MatFactory = (CreateInterface_t)GetProcAddress((HMODULE)GetModuleHandle("materialsystem.dll"), "CreateInterface");
+		CreateInterface_t PhysFactory = (CreateInterface_t)GetProcAddress((HMODULE)GetModuleHandle("vphysics.dll"), "CreateInterface");
+		CreateInterface_t StdFactory = (CreateInterface_t)GetProcAddress((HMODULE)GetModuleHandle("vstdlib.dll"), "CreateInterface");
 
-		typedef CGlowObjectManager*(__thiscall* GetGlowObjectManager_t)( void );
-		static GetGlowObjectManager_t GetGlowObjectManager = ( GetGlowObjectManager_t )Utils.PatternSearch( "client.dll", ( PBYTE )"\xA1\x00\x00\x00\x00\xA8\x01\x75\x4E", "x????xxxx", NULL, NULL );
-		g_pGlowObjectManager = GetGlowObjectManager();
-		cout << iblue << "g_pGlowObjectManager:" << igreen << g_pGlowObjectManager << endl;
-
-		pSurface = ( ISurface* )GetInterfacePtr( "VGUI_Surface", "g_pSurface", AppSystemFactory );
-		pPanel = ( IPanel* )GetInterfacePtr( "VGUI_Panel", "g_pPanel", AppSystemFactory );
+		pSurface = ( ISurface* )GetInterfacePtr( "VGUI_Surface", "g_pSurface", VGUISurfaceFactory);
+		pPanel = ( IPanel* )GetInterfacePtr( "VGUI_Panel", "g_pPanel", VGUI2Factory);
 		pClient = ( HLCLient* )GetInterfacePtr( "VClient", "g_pClient", ClientFactory );
-		pEngine = ( CEngineClient* )GetInterfacePtr( "VEngineClient", "g_pEngine", AppSystemFactory );
+		pEngine = ( CEngineClient* )GetInterfacePtr( "VEngineClient", "g_pEngine", EngineFactory );
 		pEntList = ( CEntityList* )GetInterfacePtr( "VClientEntityList", "g_pEntList", ClientFactory );
-		g_pDebugOverlay = ( CDebugOverlay* )GetInterfacePtr( "VDebugOverlay", "g_pDebugOverlay", AppSystemFactory );
-		pTrace = ( IEngineTrace* )GetInterfacePtr( "EngineTraceClient", "g_pEngineTraceClient", AppSystemFactory );
-		g_pModelInfo = ( IVModelInfo* )GetInterfacePtr( "VModelInfoClient", "g_pModelInfo", AppSystemFactory );
-		g_pModelRender = ( IVModelRender* )GetInterfacePtr( "VEngineModel", "g_ModelRender", AppSystemFactory );
+		g_pDebugOverlay = ( CDebugOverlay* )GetInterfacePtr( "VDebugOverlay", "g_pDebugOverlay", EngineFactory );
+		pTrace = ( IEngineTrace* )GetInterfacePtr( "EngineTraceClient", "g_pEngineTraceClient", EngineFactory );
+		g_pModelInfo = ( IVModelInfo* )GetInterfacePtr( "VModelInfoClient", "g_pModelInfo", EngineFactory );
+		g_pModelRender = ( IVModelRender* )GetInterfacePtr( "VEngineModel", "g_ModelRender", EngineFactory );
 		g_pPred = ( CPrediction* )GetInterfacePtr( "VClientPrediction", "g_pPred", ClientFactory );
 		g_pGameMovement = ( CGameMovement* )GetInterfacePtr( "GameMovement", "g_pGameMovement", ClientFactory );
-		pPhysProps = ( IPhysicsSurfaceProps* )GetInterfacePtr( "VPhysicsSurfaceProps", "g_pPhysprops", AppSystemFactory );
-		pMaterialSystem = ( IMaterialSystem* )GetInterfacePtr( "VMaterialSystem", "pMaterialSystem", MaterialSystemFactory );
-		g_pRenderView = ( IVRenderView* )GetInterfacePtr( "VEngineRenderView", "g_pRenderView", MaterialSystemFactory );
-		pGlobalVars = *( CGlobalVars** )( ( ( *( PDWORD* )pClient )[ 0 ] ) + GLOBALSOFFSET );
+		pPhysProps = ( IPhysicsSurfaceProps* )GetInterfacePtr( "VPhysicsSurfaceProps", "g_pPhysprops", PhysFactory );
+		pMaterialSystem = ( IMaterialSystem* )GetInterfacePtr( "VMaterialSystem", "pMaterialSystem", MatFactory );
+		g_pRenderView = ( IVRenderView* )GetInterfacePtr( "VEngineRenderView", "g_pRenderView", EngineFactory );
+		pGlobalVars = *( CGlobalVars** )( ( ( *( PDWORD* )pClient )[ 0 ] ) + 0x1B );
 		pGlobalVars = ( CGlobalVars* )*( PDWORD )pGlobalVars;
 		cout << iblue << "pGlobalVars " << igreen << ": 0x" << pGlobalVars << white << endl;
 		pInput = *( CInput** )( ( *( DWORD** )pClient )[ 15 ] + 0x1 );
 		g_ICVars = ( ICVar* )GetInterfacePtr( "VEngineCvar", "g_pCVars", StdFactory );
 		//GameEventManager = ( IGameEventManager2* )GetInterfacePtr ( "GAMEEVENTSMANAGER", "g_pGameEventManager", MaterialSystemFactory );
 		GameResources = ( DWORD )Utils.PatternSearch( "client.dll", ( PBYTE )"\x8B\x3D\x00\x00\x00\x00\x85\xFF\x0F\x84\x00\x00\x00\x00\x81\xC7", "xx????xxxx????xx", NULL, NULL ) - ( DWORD )pClient;
+		cout << iblue << "GameResources " << igreen << ": 0x" << GameResources << white << endl;
 		//g_pEffects = (IEffects*)GetInterfacePtr("VEngineEffects", "g_pEffects", AppSystemFactory);	
-		g_GameEventMgr = ( IGameEventManager2* )( fnEngineFactory( "GAMEEVENTSMANAGER002", nullptr ) );
+		g_GameEventMgr = ( IGameEventManager2* )( EngineFactory ( "GAMEEVENTSMANAGER002", nullptr ) );
+		cout << iblue << "g_GameEventMgr " << igreen << ": 0x" << g_GameEventMgr << white << endl;
 	}
 
 private:
@@ -352,7 +346,7 @@ private:
 public:
 	//IGameEventManager2* GameEventManager;
 	ISurface* pSurface;
-	DWORD* pClientMode;
+	IClientModeShared* pClientMode;
 	IPanel* pPanel;
 	HLCLient* pClient;
 	CEntityList* pEntList;

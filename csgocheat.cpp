@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "Utils/hwutils.h"
 #include "Tools/Hacks/Misc.h"
 
 extern void savesets();
@@ -59,12 +58,17 @@ bool ExitCheat()
 
 DWORD WINAPI CheatMain( LPVOID lpThreadParameter )
 {
+	AllocConsole();
+	freopen("CONIN$", "r", stdin);
+	freopen("CONOUT$", "w", stdout);
+	freopen("CONOUT$", "w", stderr);
+	SetConsoleTitle("Debug");
 	Interfaces.InitialiseSDK();
 
 	CNetvarManager::Instance()->CreateDatabase();
 	Hacks.Hook();
 	auto u = Interfaces.pEngine->GetEngineBuildNumber();
-	if( !skeltal() && ( u != 13568 ) )
+	if( u != 13580 )
 	{
 		Interfaces.pEngine->ClientCmd_Unrestricted( "cl_mouseenable 1", 0 );
 		Interfaces.pEngine->ClientCmd_Unrestricted( "crosshair 1", 0 );

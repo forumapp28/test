@@ -219,12 +219,12 @@ class CCSWeaponInfo
 public:
 	float GetPen()
 	{
-		return *( float* )( ( DWORD )this + ( DWORD )0x814 );
+		return *( float* )( ( DWORD )this + ( DWORD )0x864 );
 	}
 
 	int GetDamage()
 	{
-		return *( int* )( ( DWORD )this + ( DWORD )0x818 );
+		return *( int* )( ( DWORD )this + ( DWORD )0x868 );
 	}
 
 	float** GetRecoilTable()
@@ -234,17 +234,17 @@ public:
 
 	float GetRange()
 	{
-		return *( float* )( ( DWORD )this + ( DWORD )0x81C );
+		return *( float* )( ( DWORD )this + ( DWORD )0x86C );
 	}
 
 	float GetRangeModifier()
 	{
-		return *( float* )( ( DWORD )this + ( DWORD )0x820 );
+		return *( float* )( ( DWORD )this + ( DWORD )0x870 );
 	}
 
 	float GetArmorRatio()
 	{
-		return *( float* )( ( DWORD )this + ( DWORD )0x800 );
+		return *( float* )( ( DWORD )this + ( DWORD )0x850 );
 	}
 
 	float GetStandInacc()
@@ -796,8 +796,8 @@ public:
 	bool SetupBones( matrix3x4* pBoneToWorldOut, int nMaxBones, int boneMask, float currentTime )
 	{
 		static DWORD m_nWritableBones = Netvar("DT_BaseAnimating", "m_nForceBone");
-		static DWORD m_dwOcclusionArray = *( uintptr_t* )( Utils.PatternSearch( "client.dll", ( PBYTE ) "\xA1\x00\x00\x00\x00\x83\xEC\x30\x56\x57\x8B\xF9", "x????xxxxxxx", 0, 0 ) + 0x1 );
-		static DWORD m_bDidCheckForOcclusion = *( uintptr_t* )( Utils.PatternSearch( "client.dll", ( PBYTE ) "\xA1\x00\x00\x00\x00\x83\xEC\x30\x56\x57\x8B\xF9", "x????xxxxxxx", 0, 0 ) + 0xE );;
+		static DWORD m_dwOcclusionArray = *( uintptr_t* )( Utils.PatternSearch( "client.dll", ( PBYTE ) "\xA1\x00\x00\x00\x00\x8B\xB7\x00\x00\x00\x00\x89\x75\xF8", "x????xx????xxx", 0, 0 ) + 0x1 ); //"A1 ? ? ? ? 8B B7 ? ? ? ? 89 75 F8"
+		static DWORD m_bDidCheckForOcclusion = *( uintptr_t* )( Utils.PatternSearch( "client.dll", ( PBYTE ) "\xA1\x00\x00\x00\x00\x8B\xB7\x00\x00\x00\x00\x89\x75\xF8", "x????xx????xxx", 0, 0 ) + 0x7 ); //"A1 ? ? ? ? 8B B7 ? ? ? ? 89 75 F8"
 
 		*( int* )( ( uintptr_t )this + m_nWritableBones ) = 0;
 		*( int* )( ( uintptr_t )this + m_bDidCheckForOcclusion ) = reinterpret_cast< int* >( m_dwOcclusionArray )[ 1 ];
@@ -1516,25 +1516,9 @@ public:
 
 	CCSWeaponInfo* GetCSWpnData()
 	{
-		static DWORD GetCSWpnDataAddr = Utils.PatternSearch( "client.dll", ( PBYTE )"\x55\x8B\xEC\x81\xEC\x00\x00\x00\x00\xB8\x00\x00\x00\x00\x57", "xxxxx????x????x", NULL, NULL );
-
-		if( GetCSWpnDataAddr )
-		{
-			CCSWeaponInfo* retData;
-
-			__asm
-			{
-				mov ecx, this
-				call GetCSWpnDataAddr
-				mov retData, eax
-			}
-
-			return retData;
-		}
-		else
-		{
-			return nullptr;
-		}
+		if (!this) return nullptr;
+		typedef CCSWeaponInfo*(__thiscall* OriginalFn)(void*);
+		return  getvfunc<OriginalFn>(this, 456)(this);
 	}
 };
 

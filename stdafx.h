@@ -65,4 +65,3 @@ namespace INIT
 
 #include "Tools/Menu/Controls.h"
 #include "Hooks.h"
-//#include "jakestuff.cpp"
